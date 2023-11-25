@@ -1,109 +1,83 @@
 ﻿using MarsProject.Pages;
 using MarsProject.Utilities;
-using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MarsProject.StepDefinitions
 {
     [Binding]
-    public class LanguageStepDefinition:CommonDriver
+    public class LanguageStepDefinition : CommonDriver
     {
+
         LoginPage loginObj = new LoginPage();
-       // HomePage homeObj = new HomePage();
-
-
-        
+        HomePage homeObj = new HomePage();
+        LanguagePage languageObj = new LanguagePage();
 
         [Given(@"user logs into Mars Portal")]
         public void GivenUserLogsIntoMarsPortal()
         {
             driver = new ChromeDriver();
-            
-
             loginObj.LoginActions(driver);
-
-           
         }
 
         [Given(@"user navigates to Language section")]
         public void GivenUserNavigatesToLanguageSection()
         {
-           // homeObj.();
+            homeObj.selectLanguageOption(driver);
         }
 
         [Given(@"user need to clear all the previous records")]
         public void GivenUserNeedToClearAllThePreviousRecords()
         {
-            throw new PendingStepException();
+            languageObj.ClearAllPreviousAddedLanguage(driver);
+
         }
-        // add
-        [BeforeScenario("language")]
+
         [When(@"user add a new language record")]
+        [Given(@"user add a new language record")]
         public void WhenUserAddANewLanguageRecord()
         {
-            throw new PendingStepException();
+            languageObj.CreateNewLanguageRecord(driver);
         }
 
         [Then(@"Mars portal should save the new added language record")]
         public void ThenMarsPortalShouldSaveTheNewAddedLanguageRecord()
         {
-            throw new PendingStepException();
-        }
-        [AfterScenario("language")]
-        //edit
-        [BeforeScenario("language")]
-        [Given(@"user add a new language record")]
-        public void GivenUserAddANewLanguageRecord()
-        {
-            throw new PendingStepException();
+            languageObj.VerifyAddedLanguageRecord(driver, "French");
         }
 
+        //Edit
         [When(@"user edits an existing language record")]
         public void WhenUserEditsAnExistingLanguageRecord()
         {
-            throw new PendingStepException();
+            languageObj.UpdateNewLanguageRecord(driver);
         }
 
         [Then(@"Mars portal should save the edited language record")]
         public void ThenMarsPortalShouldSaveTheEditedLanguageRecord()
         {
-            throw new PendingStepException();
+            // Replace these values with the ones you used during editing
+            string editedLanguage = "French";
+            string editedLevel = "Basic";
+
+            // Verify the edited language record
+            languageObj.VerifyUpdatedLanguageRecord(driver, editedLanguage, editedLevel);
         }
-        [AfterScenario("language")]
-
-        //delete
-        [BeforeScenario("language")]
-
-        [Given(@"user add a new language record")]
-        public void GivenUserAddForDeleteNewLanguageRecord()
-        {
-            throw new PendingStepException();
-        }
-
+        //Delete
         [When(@"user delete an existing language record")]
         public void WhenUserDeleteAnExistingLanguageRecord()
         {
-            throw new PendingStepException();
+            // Replace "French" with the language you want to delete
+            languageObj.DeleteLanguageRecord(driver, "French");
         }
 
         [Then(@"Mars portal should delete the language record")]
         public void ThenMarsPortalShouldDeleteTheLanguageRecord()
         {
-            throw new PendingStepException();
-        }
-       
+            // Replace "French" with the language you deleted in the previous step
+            string deletedLanguage = "French";
 
+            // Verify the absence of the deleted language record
+            languageObj.VerifyDeletedLanguageRecord(driver, deletedLanguage);
+        }
     }
 }
-       
-
-
-
-
-
-

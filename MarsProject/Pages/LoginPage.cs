@@ -23,16 +23,16 @@ namespace MarsProject.Pages
             
 
             //Identify email textbox and enter valid email
-            Wait.WaitToBeVisible(driver, "Xpath", "(\"//input[@placeholder=\\\"Email address'']\")", 5);
-            IWebElement emailTextBox = driver.FindElement(By.XPath("//input[@placeholder=\"Email address'']"));
-            emailTextBox.SendKeys("mvpstudio.qa@gmail.com");
+            //Wait.WaitToBeVisible(driver, "Xpath", "(\"//input[@placeholder=\\\"Email address'']\")", 5);
+            IWebElement emailTextBox = driver.FindElement(By.XPath("//input[@placeholder='Email address']"));
+            emailTextBox.SendKeys("anuttara1989@gmail.com");
 
 
             //Identify password textbox and enter valid password
-            IWebElement passwordTextBox = driver.FindElement(By.XPath("//input[@placeholder=\"Password']"));
-            passwordTextBox.SendKeys("SydneyQa2018");
+            IWebElement passwordTextBox = driver.FindElement(By.XPath("//input[@placeholder='Password']"));
+            passwordTextBox.SendKeys("d@.u53M6U!BCCk");
 
-            IWebElement loginButton = driver.FindElement(By.XPath("//button[@class=\"fluid ui teal button\"]"));
+            IWebElement loginButton = driver.FindElement(By.XPath("//button[@class='fluid ui teal button']"));
             loginButton.Click();
         }
 
