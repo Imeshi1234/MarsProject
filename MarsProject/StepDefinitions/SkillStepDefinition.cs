@@ -1,5 +1,7 @@
 ﻿using MarsProject.Pages;
 using MarsProject.Utilities;
+using NUnit.Framework;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
 namespace MarsProject.StepDefinitions
@@ -8,18 +10,20 @@ namespace MarsProject.StepDefinitions
     public class SkillStepDefinition : CommonDriver
     {
 
-        LoginPage loginObj = new LoginPage();
+        LoginPage _loginPage = new LoginPage();
         HomePage homeObj = new HomePage();
-        SkillPage skillObj = new SkillPage();
+        SkillPage _skillPage = new SkillPage();
 
-
-
-        [Given(@"logging into Mars Portal")]
-        public void GivenLoggingIntoMarsPortal()
+        [Given(@"user log into Mars Portal with email ""([^""]*)"" and password ""([^""]*)""")]
+        public void GivenUserLogIntoMarsPortalWithEmailAndPassword(string email, string password)
         {
             driver = new ChromeDriver();
-            loginObj.LoginActions(driver);
+            _loginPage.LoginActions(driver);
+            _loginPage.ClickSignInButton(driver);
+            _loginPage.EnterLoginCredentials(driver, "anuttara1989@gmail.com", "d@.u53M6U!BCCk");
+            _loginPage.ClickLoginButton(driver);
         }
+
 
         [Given(@"user navigates to skill section")]
         public void GivenUserNavigatesToSkillSection()
@@ -27,61 +31,71 @@ namespace MarsProject.StepDefinitions
             homeObj.selectSkillOption(driver);
         }
 
-        [Given(@"user need to clear all the previous skill records")]
-        public void GivenUserNeedToClearAllThePreviousSkillRecords()
+        [Given(@"user needs to clear all the previous skill records")]
+        public void GivenUserNeedsToClearAllThePreviousSkillRecords()
         {
-            skillObj.ClearAllPreviousAddedSkills(driver);
+            _skillPage.ClearAllPreviousAddedSkills(driver);
         }
 
-
-        [When(@"user add a new skill record")]
-        [Given(@"user add a new skill record")]
-        public void WhenUserAddANewSkillRecord()
+        [When(@"user adds a new skill record with skill ""([^""]*)"" and level ""([^""]*)""")]
+        public void WhenUserAddsANewSkillRecordWithSkillAndLevel(string skill, string level)
         {
-            skillObj.CreateNewSkillRecord(driver);
+            _skillPage.CreateNewSkillRecord(driver,skill,level);
         }
 
-        [Then(@"Mars portal should save the new added skill record")]
-        public void ThenMarsPortalShouldSaveTheNewAddedSkillRecord()
+        [Then(@"Mars portal should save the new added skill records")]
+        public void ThenMarsPortalShouldSaveTheNewAddedSkillRecords()
         {
-            skillObj.VerifyAddedSkillRecord(driver,"Dancing");
+            _skillPage.VerifyAddedSkillRecord(driver,"Dancing");
+        }
+        [Given(@"user adds a new skill record with skill ""([^""]*)"" and level ""([^""]*)""")]
+        public void GivenUserAddsANewSkillRecordWithSkillAndLevel(string skill, string level)
+        {
+            _skillPage.CreateNewSkillRecord(driver,skill,level);
         }
 
-        //Edit
-        [When(@"user edits an existing skill record")]
-        public void WhenUserEditsAnExistingSkillRecord()
+        [When(@"user edits the skill record with skill ""([^""]*)"" and level ""([^""]*)""")]
+        public void WhenUserEditsTheSkillRecordWithSkillAndLevel(string skill, string newlevel)
         {
-            skillObj.UpdateNewSkillRecord(driver);
+            _skillPage.UpdateNewSkillRecord(driver, skill, newlevel);
+    
+         }
+        [Then(@"Mars portal should save the edited skill records")]
+        public void ThenMarsPortalShouldSaveTheEditedSkillRecords()
+        {
+            _skillPage.VerifyUpdatedSkillRecord(driver,"Dancing", "Intermediate");
+        }
+        [Given(@"user adds a the skill record with skill ""([^""]*)"" and level ""([^""]*)""")]
+        public void GivenUserAddsATheSkillRecordWithSkillAndLevel(string skill, string level)
+        {
+            _skillPage.CreateNewSkillRecord(driver, skill, level);
         }
 
-        [Then(@"Mars portal should save the edited skill record")]
-        public void ThenMarsPortalShouldSaveTheEditedSkillRecord()
+        [When(@"user deletes the skill record with skill ""([^""]*)""")]
+        public void WhenUserDeletesTheSkillRecordWithSkill(string skill)
         {
-            // Replace these values with the ones you used during editing
-            string editedSkill = "Dancing";
-            string editedLevel = "Expert";
-
-            // Verify the edited skill record
-            skillObj.VerifyUpdatedSkillRecord(driver, editedSkill, editedLevel);
+            _skillPage.DeleteSkillRecord(driver, skill);
         }
 
-        //Delete
-        [When(@"user delete an existing skill record")]
-        public void WhenUserDeleteAnExistingLanguageRecord()
+        [Then(@"Mars portal should verify no more skill record")]
+        public void ThenMarsPortalShouldVerifyNoMoreSkillRecord()
         {
-            // Replace "Dancing" with the skill you want to delete
-            skillObj.DeleteSkillRecord(driver, "Dancing");
+            // Assuming you have a method in your page object to check if there are no skill records
+            bool noSkillRecords = _skillPage.VerifyNoSkillRecord(driver);
+
+            // Assert that there are no skill records
+            Assert.IsTrue(noSkillRecords, "Mars portal should have no more skill records.");
         }
 
-        [Then(@"Mars portal should delete the skill record")]
-        public void ThenMarsPortalShouldDeleteTheSkillRecord()
-        {
-            // Replace "Dancing" with the language you deleted in the previous step
-            string deletedSkill = "Dancing";
-
-            // Verify the absence of the deleted language record
-            skillObj.VerifyDeletedSkillRecord(driver, deletedSkill);
-        }
     }
 
-    }
+
+
+
+}
+
+
+
+       
+
+        

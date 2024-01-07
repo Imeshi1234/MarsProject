@@ -1,5 +1,7 @@
 ﻿using MarsProject.Pages;
 using MarsProject.Utilities;
+using NUnit.Framework;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
 namespace MarsProject.StepDefinitions
@@ -8,16 +10,21 @@ namespace MarsProject.StepDefinitions
     public class LanguageStepDefinition : CommonDriver
     {
 
-        LoginPage loginObj = new LoginPage();
+        LoginPage _loginPage = new LoginPage();
         HomePage homeObj = new HomePage();
-        LanguagePage languageObj = new LanguagePage();
+        LanguagePage _languagePage = new LanguagePage();
 
-        [Given(@"user logs into Mars Portal")]
-        public void GivenUserLogsIntoMarsPortal()
+        [Given(@"user logs into Mars Portal with email ""([^""]*)"" and password ""([^""]*)""")]
+        public void GivenUserLogsIntoMarsPortalWithEmailAndPassword(string email, string password)
         {
             driver = new ChromeDriver();
-            loginObj.LoginActions(driver);
+            _loginPage.LoginActions(driver);
+            _loginPage.ClickSignInButton(driver);
+            _loginPage.EnterLoginCredentials(driver, "anuttara1989@gmail.com", "d@.u53M6U!BCCk");
+            _loginPage.ClickLoginButton(driver);
         }
+
+
 
         [Given(@"user navigates to Language section")]
         public void GivenUserNavigatesToLanguageSection()
@@ -25,59 +32,65 @@ namespace MarsProject.StepDefinitions
             homeObj.selectLanguageOption(driver);
         }
 
-        [Given(@"user need to clear all the previous records")]
-        public void GivenUserNeedToClearAllThePreviousRecords()
+        [Given(@"user needs to clear all the previous records")]
+        public void GivenUserNeedsToClearAllThePreviousRecords()
         {
-            languageObj.ClearAllPreviousAddedLanguage(driver);
-
+            _languagePage.ClearAllPreviousAddedLanguage(driver);
         }
 
-        [When(@"user add a new language record")]
-        [Given(@"user add a new language record")]
-        public void WhenUserAddANewLanguageRecord()
+        [When(@"user adds a new language record with language ""([^""]*)"" and level ""([^""]*)""")]
+        public void WhenUserAddsANewLanguageRecordWithLanguageAndLevel(string language, string level)
         {
-            languageObj.CreateNewLanguageRecord(driver);
-        }
+            _languagePage.CreateNewLanguageRecord(driver,language, level);
 
+        }
         [Then(@"Mars portal should save the new added language record")]
         public void ThenMarsPortalShouldSaveTheNewAddedLanguageRecord()
         {
-            languageObj.VerifyAddedLanguageRecord(driver, "French");
+             _languagePage.VerifyAddedLanguageRecord(driver,"English");
         }
 
-        //Edit
-        [When(@"user edits an existing language record")]
-        public void WhenUserEditsAnExistingLanguageRecord()
+        [Given(@"user adds a new language record with language ""([^""]*)"" and level ""([^""]*)""")]
+        public void GivenUserAddsANewLanguageRecordWithLanguageAndLevel(string language, string level)
         {
-            languageObj.UpdateNewLanguageRecord(driver);
+            _languagePage.CreateNewLanguageRecord(driver, language, level);
+        }
+
+        [When(@"user edits the language record with language ""([^""]*)"" and level ""([^""]*)""")]
+        public void WhenUserEditsTheLanguageRecordWithLanguageAndLevel(string language, string newLevel)
+        {
+
+            _languagePage.UpdateNewLanguageRecord(driver, language, newLevel);
         }
 
         [Then(@"Mars portal should save the edited language record")]
         public void ThenMarsPortalShouldSaveTheEditedLanguageRecord()
         {
-            // Replace these values with the ones you used during editing
-            string editedLanguage = "French";
-            string editedLevel = "Basic";
+            _languagePage.VerifyUpdatedLanguageRecord(driver, "English", "Conversational");
 
-            // Verify the edited language record
-            languageObj.VerifyUpdatedLanguageRecord(driver, editedLanguage, editedLevel);
         }
-        //Delete
-        [When(@"user delete an existing language record")]
-        public void WhenUserDeleteAnExistingLanguageRecord()
+        [Given(@"user adds a the language record with language ""([^""]*)"" and level ""([^""]*)""")]
+        public void GivenUserAddsATheLanguageRecordWithLanguageAndLevel(string language, string level)
         {
-            // Replace "French" with the language you want to delete
-            languageObj.DeleteLanguageRecord(driver, "French");
+            _languagePage.CreateNewLanguageRecord(driver, language, level);
         }
 
-        [Then(@"Mars portal should delete the language record")]
-        public void ThenMarsPortalShouldDeleteTheLanguageRecord()
+        [When(@"user deletes the language record with language ""([^""]*)""")]
+        public void WhenUserDeletesTheLanguageRecordWithLanguage(string language)
         {
-            // Replace "French" with the language you deleted in the previous step
-            string deletedLanguage = "French";
-
-            // Verify the absence of the deleted language record
-            languageObj.VerifyDeletedLanguageRecord(driver, deletedLanguage);
+            _languagePage.DeleteLanguageRecord(driver, language);
         }
+
+        [Then(@"Mars portal should verify no more language record")]
+        public void ThenMarsPortalShouldVerifyNoMoreLanguageRecord()
+        {
+            // Assuming you have a method in your page object to check if there are no language records
+            bool noLanguageRecords = _languagePage.VerifyNoLanguageRecords(driver);
+
+            // Assert that there are no language records
+            Assert.IsTrue(noLanguageRecords, "Mars portal should have no more language records.");
+        }
+
+
     }
 }

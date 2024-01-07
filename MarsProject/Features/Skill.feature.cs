@@ -20,7 +20,7 @@ namespace MarsProject.Features
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("Add,Edit and Delete Skill record")]
+    [NUnit.Framework.DescriptionAttribute("Add, Edit, and Delete skill record")]
     public partial class AddEditAndDeleteSkillRecordFeature
     {
         
@@ -35,7 +35,7 @@ namespace MarsProject.Features
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Add,Edit and Delete Skill record", null, ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Add, Edit, and Delete skill record", null, ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -73,15 +73,36 @@ namespace MarsProject.Features
             testRunner.CollectScenarioErrors();
         }
         
+        public virtual void FeatureBackground()
+        {
+#line 3
+#line hidden
+#line 4
+  testRunner.Given("user log into Mars Portal with email \"<email>\" and password \"<password>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 5
+  testRunner.And("user navigates to skill section", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 6
+  testRunner.And("user needs to clear all the previous skill records", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+        }
+        
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Create a new skill record")]
-        public virtual void CreateANewSkillRecord()
+        [NUnit.Framework.TestCaseAttribute("anuttara1989@gmail.com", "d@.u53M6U!BCCk", "Dancing", "Beginner", "Intermediate", null)]
+        public virtual void CreateANewSkillRecord(string email, string password, string skill, string level, string newLevel, string[] exampleTags)
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("email", email);
+            argumentsOfScenario.Add("password", password);
+            argumentsOfScenario.Add("skill", skill);
+            argumentsOfScenario.Add("level", level);
+            argumentsOfScenario.Add("newLevel", newLevel);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create a new skill record", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 3
-this.ScenarioInitialize(scenarioInfo);
+#line 9
+ this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
             bool isFeatureIgnored = default(bool);
@@ -100,20 +121,14 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 4
-testRunner.Given("logging into Mars Portal", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 3
+this.FeatureBackground();
 #line hidden
-#line 5
-testRunner.And("user navigates to skill section", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 10
+  testRunner.When(string.Format("user adds a new skill record with skill \"{0}\" and level \"{1}\"", skill, level), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 6
-testRunner.And("user need to clear all the previous skill records", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 7
-testRunner.When("user add a new skill record", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 8
-testRunner.Then("Mars portal should save the new added skill record", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 11
+  testRunner.Then("Mars portal should save the new added skill records", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -121,12 +136,18 @@ testRunner.Then("Mars portal should save the new added skill record", ((string)(
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Editing a skill record")]
-        public virtual void EditingASkillRecord()
+        [NUnit.Framework.TestCaseAttribute("anuttara1989@gmail.com", "d@.u53M6U!BCCk", "Dancing", "Beginner", "Intermediate", null)]
+        public virtual void EditingASkillRecord(string email, string password, string skill, string level, string newLevel, string[] exampleTags)
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("email", email);
+            argumentsOfScenario.Add("password", password);
+            argumentsOfScenario.Add("skill", skill);
+            argumentsOfScenario.Add("level", level);
+            argumentsOfScenario.Add("newLevel", newLevel);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Editing a skill record", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 10
+#line 17
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -146,36 +167,36 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 11
-testRunner.Given("logging into Mars Portal", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 3
+this.FeatureBackground();
 #line hidden
-#line 12
-testRunner.And("user navigates to skill section", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 18
+  testRunner.And(string.Format("user adds a new skill record with skill \"{0}\" and level \"{1}\"", skill, level), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 13
-testRunner.And("user need to clear all the previous skill records", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 19
+  testRunner.When(string.Format("user edits the skill record with skill \"{0}\" and level \"{1}\"", skill, newLevel), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 14
-testRunner.And("user add a new skill record", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 15
-testRunner.When("user edits an existing skill record", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 16
-testRunner.Then("Mars portal should save the edited skill record", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 20
+  testRunner.Then("Mars portal should save the edited skill records", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Delete a skill record")]
-        public virtual void DeleteASkillRecord()
+        [NUnit.Framework.DescriptionAttribute("Delete a language record")]
+        [NUnit.Framework.TestCaseAttribute("anuttara1989@gmail.com", "d@.u53M6U!BCCk", "Dancing", "Beginner", "Intermediate", null)]
+        public virtual void DeleteALanguageRecord(string email, string password, string skill, string level, string newLevel, string[] exampleTags)
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Delete a skill record", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 18
+            argumentsOfScenario.Add("email", email);
+            argumentsOfScenario.Add("password", password);
+            argumentsOfScenario.Add("skill", skill);
+            argumentsOfScenario.Add("level", level);
+            argumentsOfScenario.Add("newLevel", newLevel);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Delete a language record", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 27
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -195,23 +216,17 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 19
-testRunner.Given("logging into Mars Portal", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 3
+this.FeatureBackground();
 #line hidden
-#line 20
-testRunner.And("user navigates to skill section", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 28
+ testRunner.And(string.Format("user adds a the skill record with skill \"{0}\" and level \"{1}\"", skill, level), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 21
-testRunner.And("user need to clear all the previous skill records", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 29
+ testRunner.When(string.Format("user deletes the skill record with skill \"{0}\"", skill), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 22
-testRunner.And("user add a new skill record", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 23
-testRunner.When("user delete an existing skill record", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 24
-testRunner.Then("Mars portal should delete the skill record", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 30
+ testRunner.Then("Mars portal should verify no more skill record", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

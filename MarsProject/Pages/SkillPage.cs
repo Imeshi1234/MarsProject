@@ -37,7 +37,7 @@ namespace MarsProject.Pages
             }
         }
 
-        public void CreateNewSkillRecord(IWebDriver driver)
+        public void CreateNewSkillRecord(IWebDriver driver, string skill, string level)
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
 
@@ -54,11 +54,11 @@ namespace MarsProject.Pages
             IWebElement levelDropdown = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[@class='form-wrapper']//select[@name='level']")));
 
             // Fill in the language and level
-            skillInput.SendKeys("Dancing");
+            skillInput.SendKeys(skill);
 
             // Select the level from the dropdown
             SelectElement levelDropdownSelect = new SelectElement(levelDropdown);
-            levelDropdownSelect.SelectByText("Intermediate");
+            levelDropdownSelect.SelectByText(level);
 
             // Find and click the "Add" button
             IWebElement addButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[@class='form-wrapper']//input[@value='Add']")));
@@ -94,11 +94,12 @@ namespace MarsProject.Pages
             // Assert that the language is found
             Assert.IsTrue(skillFound, $"The added skill '{skill}' was not found in the table.");
         }
-        public void UpdateNewSkillRecord(IWebDriver driver)
+
+        public void UpdateNewSkillRecord(IWebDriver driver, string skill, string newlevel)
         {
-            // Replace "French" and "Advanced" with the values you want to set during editing
-            string editedSkill = "Dancing";
-            string editedLevel = "Expert";
+            //// Replace "French" and "Advanced" with the values you want to set during editing
+            //string editedSkill = "Dancing";
+            //string editedLevel = "Expert";
 
             // Wait for the table to be present
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
@@ -111,7 +112,7 @@ namespace MarsProject.Pages
             foreach (IWebElement row in rows)
             {
                 IWebElement skillCell = row.FindElement(By.XPath(".//td[1]")); // Assuming the language is in the first column
-                if (skillCell.Text.Trim().Equals("Dancing"))
+                if (skillCell.Text.Trim().Equals(skill))
                 {
                     // Click on the "Edit" button in the same row
                     IWebElement editButton = row.FindElement(By.XPath(".//span[@class='button']/i[@class='outline write icon']"));
@@ -123,11 +124,11 @@ namespace MarsProject.Pages
 
                     // Clear the existing text in the input field and enter the new language
                     skillInput.Clear();
-                    skillInput.SendKeys(editedSkill);
+                    skillInput.SendKeys(skill);
 
                     // Select the new level from the dropdown
                     SelectElement levelDropdownSelect = new SelectElement(levelDropdown);
-                    levelDropdownSelect.SelectByText(editedLevel);
+                    levelDropdownSelect.SelectByText(newlevel);
 
                     // Find and click the "Update" button
                     IWebElement addButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[@class='form-wrapper']//input[@value='Update']")));
@@ -143,7 +144,8 @@ namespace MarsProject.Pages
             }
         }
 
-        public void VerifyUpdatedSkillRecord(IWebDriver driver, string skill, string level)
+
+        public void VerifyUpdatedSkillRecord(IWebDriver driver, string skill, string newlevel)
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
 
@@ -165,7 +167,7 @@ namespace MarsProject.Pages
                 {
                     // Add additional checks if needed, for example, checking the level
                     IWebElement levelCell = row.FindElement(By.XPath(".//td[2]")); // Assuming the level is in the second column
-                    if (levelCell.Text.Trim().Equals(level))
+                    if (levelCell.Text.Trim().Equals(newlevel))
                     {
                         skillFound = true;
                         break;
@@ -174,10 +176,14 @@ namespace MarsProject.Pages
             }
 
             // Assert that the language is found
-            Assert.IsTrue(skillFound, $"The edited skill '{skill}' with level '{level}' was not found in the table.");
+            Assert.IsTrue(skillFound, $"The edited skill '{skill}' with level '{newlevel}' was not found in the table.");
         }
 
-        public void DeleteSkillRecord(IWebDriver driver, string skillToDelete)
+
+
+
+
+        public void DeleteSkillRecord(IWebDriver driver, string skill)
         {
 
             // Wait for the table to be present
@@ -191,7 +197,7 @@ namespace MarsProject.Pages
             foreach (IWebElement row in rows)
             {
                 IWebElement skillCell = row.FindElement(By.XPath(".//td[1]")); // Assuming the skill is in the first column
-                if (skillCell.Text.Trim().Equals(skillToDelete))
+                if (skillCell.Text.Trim().Equals(skill))
                 {
                     // Click on the "Remove" button in the same row
                     IWebElement removeButton = row.FindElement(By.XPath(".//span[@class='button']/i[@class='remove icon']"));
@@ -202,27 +208,30 @@ namespace MarsProject.Pages
             }
         }
 
-        public void VerifyDeletedSkillRecord(IWebDriver driver, string deletedSkill)
+        public bool VerifyNoSkillRecord(IWebDriver driver)
         {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
-
-            // Wait for the table to be present and visible
-            IWebElement SkillTable = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpathToFind: "//div[@class='ui bottom attached tab segment tooltip-target active' and @data-tab='second']//table[@class='ui fixed table']")));
 
             try
             {
-                // Explicitly wait for the presence of the skill to ensure it is not found
-                wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.XPath($"//table[@class='ui fixed table']//td[1][contains(text(), '{deletedSkill}')]"), ""));
+                // Find the table element
+                IWebElement table = driver.FindElement(By.XPath("//table[@class='ui fixed table']"));
+
+                // Find all rows in the table body
+                IReadOnlyCollection<IWebElement> rows = table.FindElements(By.XPath(".//tbody/tr"));
+
+                // Check if there are any rows
+                return rows.Count == 0;
             }
             catch (WebDriverTimeoutException)
             {
-                // If timeout exception occurs, it means the skill record is not found, which is expected
-                return;
+                // Handle the case where the table is not found
+                return false;
             }
-
-            // If the code reaches here, it means the skill record is still present
-            Assert.Fail($"The deleted skill '{deletedSkill}' was found in the table.");
         }
 
+        // If the code reaches here, it means the skill record is still present
+        //Assert.Fail($"The deleted skill '{deletedSkill}' was found in the table.");
     }
+
 }
+

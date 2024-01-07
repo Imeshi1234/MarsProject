@@ -41,7 +41,7 @@ namespace MarsProject.Pages
             }
         }
 
-        public void CreateNewLanguageRecord(IWebDriver driver)
+        public void CreateNewLanguageRecord(IWebDriver driver,string language, string level)
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
 
@@ -50,7 +50,7 @@ namespace MarsProject.Pages
             languagesTab.Click();  // Click on the "Languages" tab
 
             // Wait for the "Add New" button under the "Languages" tab to be clickable
-            IWebElement addNewButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[@data-tab='first']//div[@class='ui teal button']")));
+            IWebElement addNewButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/thead/tr/th[3]/div")));
             addNewButton.Click();  // Click on the "Add New" button
 
             // Wait for the input fields to be visible
@@ -58,11 +58,11 @@ namespace MarsProject.Pages
             IWebElement levelDropdown = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[@class='form-wrapper']//select[@name='level']")));
 
             // Fill in the language and level
-            languageInput.SendKeys("French");
+            languageInput.SendKeys(language);
 
             // Select the level from the dropdown
             SelectElement levelDropdownSelect = new SelectElement(levelDropdown);
-            levelDropdownSelect.SelectByText("Fluent");
+            levelDropdownSelect.SelectByText(level);
 
             // Find and click the "Add" button
             IWebElement addButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[@class='form-wrapper']//input[@value='Add']")));
@@ -70,7 +70,7 @@ namespace MarsProject.Pages
 
         }
 
-        public void VerifyAddedLanguageRecord(IWebDriver driver, string language)
+        public void VerifyAddedLanguageRecord(IWebDriver driver,string language)
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
 
@@ -99,11 +99,11 @@ namespace MarsProject.Pages
             Assert.IsTrue(languageFound, $"The added language '{language}' was not found in the table.");
         }
 
-        public void UpdateNewLanguageRecord(IWebDriver driver)
+        public void UpdateNewLanguageRecord(IWebDriver driver,string language, string newLevel)
         {
-            // Replace "French" and "Advanced" with the values you want to set during editing
-            string editedLanguage = "French";
-            string editedLevel = "Basic";
+            //// Replace "French" and "Advanced" with the values you want to set during editing
+            //string editedLanguage = "French";
+            //string editedLevel = "Basic";
 
             // Wait for the table to be present
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
@@ -116,7 +116,7 @@ namespace MarsProject.Pages
             foreach (IWebElement row in rows)
             {
                 IWebElement languageCell = row.FindElement(By.XPath(".//td[1]")); // Assuming the language is in the first column
-                if (languageCell.Text.Trim().Equals("French"))
+                if (languageCell.Text.Trim().Equals(language))
                 {
                     // Click on the "Edit" button in the same row
                     IWebElement editButton = row.FindElement(By.XPath(".//span[@class='button']/i[@class='outline write icon']"));
@@ -128,11 +128,11 @@ namespace MarsProject.Pages
 
                     // Clear the existing text in the input field and enter the new language
                     languageInput.Clear();
-                    languageInput.SendKeys(editedLanguage);
+                    languageInput.SendKeys(language);
 
                     // Select the new level from the dropdown
                     SelectElement levelDropdownSelect = new SelectElement(levelDropdown);
-                    levelDropdownSelect.SelectByText(editedLevel);
+                    levelDropdownSelect.SelectByText(newLevel);
 
                     // Find and click the "Update" button
                     IWebElement addButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//div[@class='form-wrapper']//input[@value='Update']")));
@@ -148,7 +148,7 @@ namespace MarsProject.Pages
             }
         }
 
-        public void VerifyUpdatedLanguageRecord(IWebDriver driver, string language, string level)
+        public void VerifyUpdatedLanguageRecord(IWebDriver driver, string language,string newLevel)
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
 
@@ -170,7 +170,7 @@ namespace MarsProject.Pages
                 {
                     // Add additional checks if needed, for example, checking the level
                     IWebElement levelCell = row.FindElement(By.XPath(".//td[2]")); // Assuming the level is in the second column
-                    if (levelCell.Text.Trim().Equals(level))
+                    if (levelCell.Text.Trim().Equals(newLevel))
                     {
                         languageFound = true;
                         break;
@@ -179,10 +179,10 @@ namespace MarsProject.Pages
             }
 
             // Assert that the language is found
-            Assert.IsTrue(languageFound, $"The edited language '{language}' with level '{level}' was not found in the table.");
+            Assert.IsTrue(languageFound, $"The edited language '{language}' with level '{newLevel}' was not found in the table.");
         }
 
-        public void DeleteLanguageRecord(IWebDriver driver, string languageToDelete)
+        public void DeleteLanguageRecord(IWebDriver driver, string language)
         {
 
             // Wait for the table to be present
@@ -196,7 +196,7 @@ namespace MarsProject.Pages
             foreach (IWebElement row in rows)
             {
                 IWebElement languageCell = row.FindElement(By.XPath(".//td[1]")); // Assuming the language is in the first column
-                if (languageCell.Text.Trim().Equals(languageToDelete))
+                if (languageCell.Text.Trim().Equals(language))
                 {
                     // Click on the "Remove" button in the same row
                     IWebElement removeButton = row.FindElement(By.XPath(".//span[@class='button']/i[@class='remove icon']"));
@@ -206,27 +206,46 @@ namespace MarsProject.Pages
                 }
             }
         }
-
-        public void VerifyDeletedLanguageRecord(IWebDriver driver, string deletedLanguage)
+        public bool VerifyNoLanguageRecords(IWebDriver driver)
         {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
-
-            // Wait for the table to be present and visible
-            IWebElement languageTable = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpathToFind: "//table[@class='ui fixed table']")));
-
             try
             {
-                // Explicitly wait for the presence of the language to ensure it is not found
-                wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.XPath($"//table[@class='ui fixed table']//td[1][contains(text(), '{deletedLanguage}')]"), ""));
+                // Find the table element
+                IWebElement table = driver.FindElement(By.XPath("//table[@class='ui fixed table']"));
+
+                // Find all rows in the table body
+                IReadOnlyCollection<IWebElement> rows = table.FindElements(By.XPath(".//tbody/tr"));
+
+                // Check if there are any rows
+                return rows.Count == 0;
             }
             catch (WebDriverTimeoutException)
             {
-                // If timeout exception occurs, it means the language record is not found, which is expected
-                return;
+                // Handle the case where the table is not found
+                return false;
             }
-
-            // If the code reaches here, it means the language record is still present
-            Assert.Fail($"The deleted language '{deletedLanguage}' was found in the table.");
         }
+
+        //public void VerifyDeletedLanguageRecord(IWebDriver driver, string deletedLanguage)
+        //{
+        //    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+
+        //    // Wait for the table to be present and visible
+        //    IWebElement languageTable = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpathToFind: "//table[@class='ui fixed table']")));
+
+        //    try
+        //    {
+        //        // Explicitly wait for the presence of the language to ensure it is not found
+        //        wait.Until(ExpectedConditions.TextToBePresentInElementLocated(By.XPath($"//table[@class='ui fixed table']//td[1][contains(text(), '{deletedLanguage}')]"), ""));
+        //    }
+        //    catch (WebDriverTimeoutException)
+        //    {
+        //        // If timeout exception occurs, it means the language record is not found, which is expected
+        //        return;
+        //    }
+
+        //    // If the code reaches here, it means the language record is still present
+        //    Assert.Fail($"The deleted language '{deletedLanguage}' was found in the table.");
+        //}
     }
 }
